@@ -1,7 +1,6 @@
 import discord
 import os
 #import search_runpee
-# OTYwODUzMjI2NDczODExOTk4.YkweTA.hZ3_KMwLbVQt-hlpqvgvKZ9tUPI Bot Token
 import WebScrape
 
 from dotenv import load_dotenv
