@@ -11,10 +11,23 @@ def is_liveYT(url):
     else:
         return False
 
+def is_liveTwitch():
+
+    return
+
+def getUserTopAnime(name):
+    characters = []
+    url = "https://www.myanimelist.net/profile/" + name
+    page = requests.get(url, cookies={'CONSENT': 'YES+42'})
+    soup = BeautifulSoup(page.content, "html.parser")
+     
+
+    return
+
 
 # Debug
 if __name__ == "__main__":
     print()
     #print(is_liveYT("https://www.youtube.com/c/LofiGirl/live"))
     #print(is_liveYT("https://www.youtube.com/channel/UC-hM6YJuNYVAmUWxeIr9FeA/live"))
-    #print(subs_YT('https://www.youtube.com/channel/UC-hM6YJuNYVAmUWxeIr9FeA'))
+    

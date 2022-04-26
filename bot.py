@@ -1,7 +1,7 @@
 import discord
 import os
-#import search_runpee
 import WebScrape
+import random
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -38,7 +38,9 @@ async def on_message(message):
             await message.channel.send("$" + command + ": " + command_list[command])
     
     if (f"apex legends") in message.content:
-            await message.channel.send(":face_vomiting:")
+            await message.add_reaction(u"\U0001F92E")
+
+    #if message.content == (f"$rps"):
 
 @client.event
 
