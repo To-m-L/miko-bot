@@ -33,15 +33,16 @@ def getUserTopFavorites(name):
     
     for entry in entries:
         if "anime" in entry.split("/"):
-            animes.append(entry.split("/")[-1])
+            if "producer" in entry.split("/"):
+                companies.append(entry.split("/")[-1])
+            else:
+                animes.append(entry.split("/")[-1])
         elif "character" in entry.split("/"):
             characters.append(entry.split("/")[-1])
         elif "people" in entry.split("/"):
             people.append(entry.split("/")[-1])
         elif "manga" in entry.split("/"):
             mangas.append(entry.split("/")[-1])
-        elif "producer" in entry.split("/"):
-            companies.append(entry.split("/")[-1])
 
     allFavorites = [characters, animes, mangas, people, companies]
 
@@ -67,12 +68,29 @@ def getUserFavoriteCompanies(name):
     companies = getUserTopFavorites(name)[4]
     return companies
 
+def getUserScoreAnime(name, anime):
+    animeURL = anime.replace(" ", "%20")
+    url = "https://www.myanimelist.net/animelist/" + name + "?s=" +animeURL
+    page = requests.get(url, cookies={'CONSENT': 'YES+42'})
+    soup = BeautifulSoup(page.content, "html.parser")
+    score = soup.find_all(class_="list-table")
+    info = ""
+    for entry in score:
+        info = str(entry.attrs)
+    
+    infoSplit = info.split("{\"status") 
+    
+
+
+    return 
+
 # Debug
 if __name__ == "__main__":
     print()
     #print(is_liveYT("https://www.youtube.com/c/LofiGirl/live"))
     #print(is_liveYT("https://www.youtube.com/channel/UC-hM6YJuNYVAmUWxeIr9FeA/live"))
-    print(getUserTopFavorites("terminal_"))
-    print(getUserFavoriteCharacter("terminal_"))
+    #print(getUserTopFavorites("terminal_"))
+    #print(getUserFavoriteCharacter("terminal_"))
+    print(getUserScoreAnime("terminal_", "fate/stay night"))
 
     
