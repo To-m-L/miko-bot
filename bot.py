@@ -10,9 +10,10 @@ client = discord.Client()
 
 command_list = {
     "hello" : "Miko says hello back",
-    "live" : "Checks live status of Miko's stream",
+    "livemiko" : "Checks live status of Miko's stream",
     "help" : "displays help",
-    "malfav" : "Shows the favorites of a user based on their MyAnimeList"
+    "malfav" : "Syntax: $malfav (username) (category name). Shows the favorites of a user based on their MyAnimeList",
+    "malscore" : "Syntax: $malscore (username) (anime name). Shows score user gave on anime"
 }
 
 @client.event
@@ -27,7 +28,7 @@ async def on_message(message):
     if message.content.lower() == (f'$hello'):
         await message.channel.send("Hello nye")
 
-    if message.content.lower() == (f'$live'):
+    if message.content.lower() == (f'$livemiko'):
         if WebScrape.is_liveYT("https://www.youtube.com/channel/UC-hM6YJuNYVAmUWxeIr9FeA/live") == True:
             await message.channel.send("Nye :cherry_blossom: \n https://www.youtube.com/channel/UC-hM6YJuNYVAmUWxeIr9FeA/live")
         else:
@@ -42,7 +43,6 @@ async def on_message(message):
     
     if "$malfav" in message.content.lower():
         msg = message.content.split(" ")
-        print(len(msg))
         if(len(msg) == 3):
             if message.content.split(" ")[2].lower() == "character":
                 characters = WebScrape.getUserFavoriteCharacter(message.content.split(" ")[1])
@@ -155,7 +155,55 @@ async def on_message(message):
                 await message.channel.send(entry)
         else:
             await message.channel.send("Correct Syntax: $malfav (username) (category)")
+    
+    if f"$malscore" in message.content.lower():
+        msg = message.content.split(" ")
+        username = msg[1]
+        anime = msg[2:]
+        animeName = ""
+        for word in anime:
+            if anime.index(word) != len(anime)-1:
+                animeName = animeName + word + " "
+            else:
+                animeName = animeName + word
         
+        animeList = WebScrape.getUserScoreAnime(username, animeName)[0]
+        scores = WebScrape.getUserScoreAnime(username, animeName)[1]
+        status = WebScrape.getUserScoreAnime(username, animeName)[2]
+
+        await message.channel.send("Searching **" + username + "'s** list for \"" + animeName + "\"... \n")
+
+        if len(animeList) == 0:
+            await message.channel.send("**" + username + "** does not have a rating for \"" + animeName + "\"")
+
+        else:
+            output = ""
+            counter=0
+            for entry in animeList:
+
+                if status[counter] == '2':
+                    if scores[counter] == '0':
+                        output = output + ":white_check_mark:  : " + entry + " : **" + "-" + "**\n"
+                    else:
+                        output = output + ":white_check_mark:  : " + entry + " : **" + scores[counter] + "**\n"
+                    
+
+                elif status[counter] == '3':
+                    if scores[counter] == '0':
+                        output = output + "✋ : " + entry + " : **" + "-" + "**\n"
+                    else:
+                        output = output + "✋ : " + entry + " : **" + scores[counter] + "**\n"
+
+                elif status[counter] == '4':
+                    if scores[counter] == '0':
+                        output = output + "🛑 : " + entry + " : **" + "-" + "**\n"
+                    else:
+                        output = output + "🛑 : " + entry + " : **" + scores[counter] + "**\n"
+
+                counter+=1
+            
+            await message.channel.send(output)
+
 
 @client.event
 

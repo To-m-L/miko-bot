@@ -78,11 +78,39 @@ def getUserScoreAnime(name, anime):
     for entry in score:
         info = str(entry.attrs)
     
-    infoSplit = info.split("{\"status") 
+    infoList = info.split("{\"status") 
     
+    animeTitleList = []
+    scoreString = []
+    status = []
 
+    for entry in infoList:
+       # print(entry)
+        sections = entry.split("\"")
+        animeTitle=""
+        if entry[2] == '6':
+            continue
+        if entry[2].isnumeric():
+            status.append(entry[2])
+        if "anime_title" in sections:
+            animeTitle = sections[sections.index("anime_title") + 2]
+            animeTitleList.append(animeTitle)
+        if "score" in sections:
+            scoreString.append(sections[sections.index("score") + 1])
+    
+    # Tidying up
+    scores = []
+    for score in scoreString:
+        if len(score) == 3:
+            scores.append(score[1])
+        else:
+            scores.append(score[1] + score[2])
+    
+    animeList = []
+    for entry in animeTitleList:
+        animeList.append(entry.replace("\\", ""))
 
-    return 
+    return animeList, scores, status
 
 # Debug
 if __name__ == "__main__":
